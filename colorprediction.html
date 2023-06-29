@@ -2,34 +2,96 @@
 <html>
 <head>
   <title>Aaronson Oracle - Color Prediction</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/kefir/3.8.6/kefir.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .button {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      line-height: 200px;
+      cursor: pointer;
+    }
+
+    #red-button {
+      background-color: #ff5050;
+    }
+
+    #blue-button {
+      background-color: #4d94ff;
+    }
+
+    .percentage-container {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      margin-top: 20px;
+    }
+
+    .percentage-label {
+      font-size: 18px;
+    }
+
+    .percentage-value {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>Aaronson Oracle - Color Prediction</h1>
   <p>Predict the next color you will choose:</p>
-  <button id="red-button">Red</button>
-  <button id="blue-button">Blue</button>
+  <div>
+    <button id="red-button" class="button">Red</button>
+    <button id="blue-button" class="button">Blue</button>
+  </div>
+  <div class="percentage-container">
+    <div class="percentage-label">Correct Prediction Percentage:</div>
+    <div class="percentage-value" id="correct-percentage">0</div>
+  </div>
+  <div class="percentage-container">
+    <div class="percentage-label">Total Guesses:</div>
+    <div class="percentage-value" id="total-guesses">0</div>
+  </div>
+  <div class="percentage-container">
+    <div class="percentage-label">Free Will Rating:</div>
+    <div class="percentage-value" id="free-will-rating">100</div>
+  </div>
 
   <script>
-    var kefir = Kefir;
-    var _ = lodash;
-
     var model = {};
-    
-    function updateModelF (color) {
+    var totalGuesses = 0;
+    var correctGuesses = 0;
+
+    function updateModelF(color) {
       return function () {
         var fg = model[color];
         if (!fg) {
           model[color] = { red: 0, blue: 0 };
         }
         model[color][color] += 1;
-      }
+      };
     }
-    
-    function predictNextColor () {
+
+    function predictNextColor() {
       var m = model['red'];
-      if (!m || !m.blue) {
+      if (!m || m.red === 0) {
         return 'red';
       }
       if (m.blue > m.red) {
@@ -37,35 +99,46 @@
       }
       return 'red';
     }
-    
-    function predict (color) {
+
+    function updatePercentage() {
+      var percentage = (correctGuesses / totalGuesses) * 100;
+      document.getElementById('correct-percentage').textContent = percentage.toFixed(2);
+      document.getElementById('total-guesses').textContent = totalGuesses;
+      var freeWillRating = 100 - Math.abs(percentage - 50) * 2;
+      document.getElementById('free-will-rating').textContent = freeWillRating.toFixed(2);
+    }
+
+    function predict(color) {
       // predict next value
       var prediction = predictNextColor();
-      
+
       // make a function to update the model after the user's choice
       var updateModel = updateModelF(color);
-      
+
       // update the model with the user's choice
       updateModel();
-      
-      // return the prediction and the user's choice
-      return [prediction, color];
+
+      // update guess statistics
+      if (prediction === color) {
+        correctGuesses++;
+      }
+      totalGuesses++;
+
+      // update correct prediction percentage, total guesses, and free will rating
+      updatePercentage();
     }
-    
+
     var redButton = document.getElementById('red-button');
     var blueButton = document.getElementById('blue-button');
-    
+
     redButton.addEventListener('click', function() {
-      var result = predict('red');
-      console.log('Prediction:', result[0]);
-      console.log('User choice:', result[1]);
+      predict('red');
     });
-    
+
     blueButton.addEventListener('click', function() {
-      var result = predict('blue');
-      console.log('Prediction:', result[0]);
-      console.log('User choice:', result[1]);
+      predict('blue');
     });
   </script>
 </body>
 </html>
+
