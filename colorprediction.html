@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aaronson Oracle - Color Prediction</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/kefir/3.8.6/kefir.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+</head>
+<body>
+  <h1>Aaronson Oracle - Color Prediction</h1>
+  <p>Predict the next color you will choose:</p>
+  <button id="red-button">Red</button>
+  <button id="blue-button">Blue</button>
+
+  <script>
+    var kefir = Kefir;
+    var _ = lodash;
+
+    var model = {};
+    
+    function updateModelF (color) {
+      return function () {
+        var fg = model[color];
+        if (!fg) {
+          model[color] = { red: 0, blue: 0 };
+        }
+        model[color][color] += 1;
+      }
+    }
+    
+    function predictNextColor () {
+      var m = model['red'];
+      if (!m || !m.blue) {
+        return 'red';
+      }
+      if (m.blue > m.red) {
+        return 'blue';
+      }
+      return 'red';
+    }
+    
+    function predict (color) {
+      // predict next value
+      var prediction = predictNextColor();
+      
+      // make a function to update the model after the user's choice
+      var updateModel = updateModelF(color);
+      
+      // update the model with the user's choice
+      updateModel();
+      
+      // return the prediction and the user's choice
+      return [prediction, color];
+    }
+    
+    var redButton = document.getElementById('red-button');
+    var blueButton = document.getElementById('blue-button');
+    
+    redButton.addEventListener('click', function() {
+      var result = predict('red');
+      console.log('Prediction:', result[0]);
+      console.log('User choice:', result[1]);
+    });
+    
+    blueButton.addEventListener('click', function() {
+      var result = predict('blue');
+      console.log('Prediction:', result[0]);
+      console.log('User choice:', result[1]);
+    });
+  </script>
+</body>
+</html>
