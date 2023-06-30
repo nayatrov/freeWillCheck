@@ -1,0 +1,71 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .button {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+  }
+
+  #red-button {
+    background-color: #ff5050;
+  }
+
+  #blue-button {
+    background-color: #4d94ff;
+  }
+
+  .percentage-container {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin-top: 20px;
+  }
+
+  .percentage-label {
+    font-size: 18px;
+  }
+
+  .percentage-value {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .container {
+    min-height: 100%;
+    text-align: center;
+  }
+
+  .page-content {
+    padding-top: 50px;
+    margin: 0 auto;
+    max-width: 400px;
+  }
+
+  .explanation {
+    margin-top: 50px;
+    text-align: left;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
