@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Aaronson Oracle - Color Prediction</title>
-  <style>
+  <style> 
     body {
       display: flex;
       flex-direction: column;
@@ -52,93 +52,87 @@
       font-size: 24px;
       font-weight: bold;
     }
+
+    .container {
+      min-height: 100%;
+      text-align: center;
+    }
+
+    .page-content {
+      padding-top: 50px;
+      margin: 0 auto;
+      max-width: 400px;
+    }
+
+    .explanation {
+      margin-top: 50px;
+      text-align: left;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <h1>Aaronson Oracle - Color Prediction</h1>
-  <p>Predict the next color you will choose:</p>
-  <div>
-    <button id="red-button" class="button">Red</button>
-    <button id="blue-button" class="button">Blue</button>
+  <div class="container">
+    <h1><a href="#explanation-aaronson">Aaronson Oracle</a> - Color Prediction</h1>
+    <div class="page-content">
+      <p>Predict the next color you will choose:</p>
+      <div class="button-container">
+        <button id="red-button" class="button">Red</button>
+        <button id="blue-button" class="button">Blue</button>
+      </div>
+      <div class="percentage-container">
+        <div class="percentage-label">Correct Prediction Percentage:</div>
+        <div class="percentage-value" id="correct-percentage">0</div>
+      </div>
+      <div class="percentage-container">
+        <div class="percentage-label">Total Guesses:</div>
+        <div class="percentage-value" id="total-guesses">0</div>
+      </div>
+      <div class="percentage-container">
+        <div class="percentage-label">
+          Free Will Rating:
+          <a href="#explanation-freewill">(Explanation)</a>
+        </div>
+        <div class="percentage-value" id="free-will-rating">100</div>
+      </div>
+    </div>
+
+    <div class="explanation" id="explanation-aaronson">
+      <h2>Aaronson Oracle</h2>
+      <p>
+        An Aaronson Oracle is a concept introduced by the theoretical physicist and computer scientist Scott Aaronson.
+        It refers to a hypothetical computational oracle that can predict the outcome of certain events or actions,
+        based on statistical patterns or historical data.
+      </p>
+      <p>
+        In the context of this Color Prediction Oracle, the Aaronson Oracle attempts to predict the next color
+        you will choose based on the frequency of your previous color choices.
+        It uses a simple statistical model to make predictions, updating its model with each new user choice.
+        The Correct Prediction Percentage provides insights into the performance of the prediction model.
+      </p>
+    </div>
+
+    <div class="explanation" id="explanation-freewill">
+      <h2>Free Will Rating</h2>
+      <p>
+        The Free Will Rating is a measure of the perceived freedom in your color choices
+        compared to the predictions made by the Aaronson Oracle.
+      </p>
+      <p>
+        It is calculated as follows:
+        For every percentage point the Correct Prediction Percentage is above or below 50%,
+        the Free Will Rating decreases by 2%.
+        A higher Free Will Rating indicates a higher perceived freedom in your color choices.
+      </p>
+    </div>
   </div>
-  <div class="percentage-container">
-    <div class="percentage-label">Correct Prediction Percentage:</div>
-    <div class="percentage-value" id="correct-percentage">0</div>
-  </div>
-  <div class="percentage-container">
-    <div class="percentage-label">Total Guesses:</div>
-    <div class="percentage-value" id="total-guesses">0</div>
-  </div>
-  <div class="percentage-container">
-    <div class="percentage-label">Free Will Rating:</div>
-    <div class="percentage-value" id="free-will-rating">100</div>
-  </div>
 
-  <script>
-    var model = {};
-    var totalGuesses = 0;
-    var correctGuesses = 0;
-
-    function updateModelF(color) {
-      return function () {
-        var fg = model[color];
-        if (!fg) {
-          model[color] = { red: 0, blue: 0 };
-        }
-        model[color][color] += 1;
-      };
-    }
-
-    function predictNextColor() {
-      var m = model['red'];
-      if (!m || m.red === 0) {
-        return 'red';
-      }
-      if (m.blue > m.red) {
-        return 'blue';
-      }
-      return 'red';
-    }
-
-    function updatePercentage() {
-      var percentage = (correctGuesses / totalGuesses) * 100;
-      document.getElementById('correct-percentage').textContent = percentage.toFixed(2);
-      document.getElementById('total-guesses').textContent = totalGuesses;
-      var freeWillRating = 100 - Math.abs(percentage - 50) * 2;
-      document.getElementById('free-will-rating').textContent = freeWillRating.toFixed(2);
-    }
-
-    function predict(color) {
-      // predict next value
-      var prediction = predictNextColor();
-
-      // make a function to update the model after the user's choice
-      var updateModel = updateModelF(color);
-
-      // update the model with the user's choice
-      updateModel();
-
-      // update guess statistics
-      if (prediction === color) {
-        correctGuesses++;
-      }
-      totalGuesses++;
-
-      // update correct prediction percentage, total guesses, and free will rating
-      updatePercentage();
-    }
-
-    var redButton = document.getElementById('red-button');
-    var blueButton = document.getElementById('blue-button');
-
-    redButton.addEventListener('click', function() {
-      predict('red');
-    });
-
-    blueButton.addEventListener('click', function() {
-      predict('blue');
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
 
